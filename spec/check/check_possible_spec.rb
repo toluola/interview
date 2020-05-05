@@ -50,7 +50,7 @@ RSpec.describe CheckPossible do
     it { expect(subject.call).to be_falsey }
   end
   context 'order created at sunday 08:01, for sunday 22:29' do
-    let(:delivery_created_time) { Time.new(2019, 5, 12, 8, 0o1, 0, '+02:00') } # saturday
+    let(:delivery_created_time) { Time.new(2019, 5, 12, 8,  01, 0, '+02:00') } # saturday
     let(:courier_delivery_time) { Time.new(2019, 5, 12, 22, 29, 0, '+02:00') } # sunday, non-working
 
     it { expect(subject.call).to be_falsey }

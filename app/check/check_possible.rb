@@ -11,11 +11,16 @@ class CheckPossible
   end
 
   def call
-    # order is possible to realise when time to courier delivery intersection with shop open time hour ranges is non-empty
-    order_delivery_range = (delivery_created_time + TIME_FOR_COURIER_DELIVERY_IN_HOURS.hours..courier_delivery_time.to_time)
-    shop_days_open_range_enumerator = (delivery_created_time.to_i..(courier_delivery_time.to_date.to_time + 1.day).to_i).step(1.day).map { |t| ::Time.at(t).to_datetime }
-  
-    shop_working_ranges = [].tap do |array|
+    order is possible to realise when time to courier delivery intersection with shop open time hour ranges is non-empty
+    if (courier_delivery_time - delivery_created_time < 40000.0)
+      order_delivery_range = (delivery_created_time + TIME_FOR_COURIER_DELIVERY_IN_HOURS.hours..courier_delivery_time.to_time)
+      shop_days_open_range_enumerator = (delivery_created_time.to_i..(courier_delivery_time.to_date.to_time + 1.day).to_i).step(1.day).map { |t| ::Time.at(t).to_datetime }
+    else 
+      order_delivery_range = (delivery_created_time + TIME_FOR_COURIER_DELIVERY_IN_HOURS.hours..courier_delivery_time.to_date.to_time + 1.day)
+      shop_days_open_range_enumerator = (delivery_created_time.to_i..(courier_delivery_time.to_date.to_time + 2.day).to_i).step(1.day).map { |t| ::Time.at(t).to_datetime }
+    end
+
+      shop_working_ranges = [].tap do |array|
       shop_days_open_range_enumerator.each do |shop_working_day|
         unless Holiday.present_on?(shop_working_day)
           if shop_working_day.sunday?
